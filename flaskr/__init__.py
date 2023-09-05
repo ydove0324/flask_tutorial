@@ -1,6 +1,6 @@
 import os
  
-from flask import Flask,escape
+from flask import Flask,escape,render_template
 
 def create_app(test_config=None):
     # print(__name__,"!!!")
@@ -20,14 +20,14 @@ def create_app(test_config=None):
     except OSError:
         pass
     
-    @app.route('/hello/<id>')
-    def hello(id):
-        if escape(id) == "1":
-            return "I will success"
-        return "<p>Hello World</p>"
     from . import db
     from . import auth
     # print("before initilization")
     db.init_app(app)
     app.register_blueprint(auth.bp)
+
+    from . import blog
+
+    app.register_blueprint(blog.bp)
+    app.add_url_rule('/',endpoint='index')
     return app
